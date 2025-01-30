@@ -12,11 +12,11 @@ server:
     context-path: "/backend"
 
 
-#spring:
-#  datasource:
-#    url: jdbc:mysql://mysql-leakdg-service.mysql-operator.svc.cluster.local/squid_corals_backend
-#    username: root
-#    password: password
+spring:
+  datasource:
+    url: jdbc:mysql://mysql.mysql-operator.svc.cluster.local/reef-forge-database
+    username: root
+    password: veryStrongPassword@7410
 
 
   # Logging configs

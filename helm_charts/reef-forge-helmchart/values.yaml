@@ -1,0 +1,12 @@
+app:
+  name: reef-forge-backend
+  image:
+    name: docker.io/sujan7410/reef-forge-backend
+    tag: latest
+namespace:
+  name: reef-forge-backend
+
+
+ports:
+  targetPort: 9080
+  servicePort: 9080
