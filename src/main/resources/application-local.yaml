@@ -14,11 +14,6 @@ server:
 
 
 #
-#spring:
-#  datasource:
-#    url: jdbc:mysql://localhost/himalayanfresh_coffee
-#    username: root
-#    password: password
 
 #spring:
 #  datasource:
@@ -29,14 +24,19 @@ server:
 #
 #  #
 spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/himalayanfresh_coffee
+    username: root
+    password: password
+
   jpa:
     hibernate:
       ddl-auto: update
       naming-strategy: org.hibernate.cfg.ImprovedNamingStrategy
       dialect: org.hibernate.dialect.MySQLDialect
       format_sql: true
-      use_sql_comments: true
-    show-sql: true
+#      use_sql_comments: true
+#    show-sql: true
 
   mail:
     host: smtp.gmail.com
