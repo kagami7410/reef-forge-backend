@@ -9,12 +9,13 @@ public class SpringGlobalConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("http://localhost:3000")
-                .allowedOrigins("https://reef-forge-backend-service.reef-forge-backend.svc.cluster.local")
-                .allowedOrigins("http://reef-forge-backend-service.reef-forge-backend.svc.cluster.local")
-                .allowedOrigins("https://reef-forge-frontend-service.reef-forge-frontend.svc.cluster.local")
-                .allowedOrigins("http://reef-forge-frontend-service.reef-forge-frontend.svc.cluster.local")
+//                .allowedOrigins("http://localhost:3000")
+//                .allowedOrigins("https://reef-forge-backend-service.reef-forge-backend.svc.cluster.local")
+//                .allowedOrigins("http://reef-forge-backend-service.reef-forge-backend.svc.cluster.local")
+//                .allowedOrigins("https://reef-forge-frontend-service.reef-forge-frontend.svc.cluster.local")
+//                .allowedOrigins("http://reef-forge-frontend-service.reef-forge-frontend.svc.cluster.local")
 
+                .allowedOrigins("*")
 
 //                .allowedOriginPatterns("*")
 
