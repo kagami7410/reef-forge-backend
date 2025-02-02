@@ -16,9 +16,7 @@ public class SpringGlobalConfig implements WebMvcConfigurer {
 //                .allowedOrigins("http://reef-forge-frontend-service.reef-forge-frontend.svc.cluster.local")
 
                 .allowedOrigins("*")
-
 //                .allowedOriginPatterns("*")
-
                 .allowedHeaders("*")
                 .allowCredentials(true)
                 .allowedMethods("*");
