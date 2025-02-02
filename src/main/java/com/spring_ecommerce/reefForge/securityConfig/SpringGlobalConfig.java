@@ -18,7 +18,7 @@ public class SpringGlobalConfig implements WebMvcConfigurer {
                 .allowedOrigins("*")
 //                .allowedOriginPatterns("*")
                 .allowedHeaders("*")
-                .allowCredentials(true)
+//                .allowCredentials(true)
                 .allowedMethods("*");
     }
 }
