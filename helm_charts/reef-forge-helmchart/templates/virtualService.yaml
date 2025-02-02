@@ -8,7 +8,8 @@ spec:
   - "reef-forge.uk"
   - {{ .Values.app.name}}-service.{{ .Values.namespace.name}}.svc.cluster.local
   gateways:
-  - istio-system/reef-forge-istio-ingress-gateway 
+  - istio-system/reef-forge-istio-ingress-gateway
+  - mesh
   http:
   - match:
     - uri:
