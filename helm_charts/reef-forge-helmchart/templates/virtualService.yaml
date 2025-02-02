@@ -6,7 +6,6 @@ metadata:
 spec:
   hosts:
   - "reef-forge.uk"
-  - {{ .Values.app.name}}-service.{{ .Values.namespace.name}}.svc.cluster.local
   gateways:
   - istio-system/reef-forge-istio-ingress-gateway 
   http:
