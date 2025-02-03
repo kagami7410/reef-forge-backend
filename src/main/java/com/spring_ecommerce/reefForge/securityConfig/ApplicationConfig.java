@@ -28,10 +28,10 @@ public class ApplicationConfig {
     private final UserRepository userRepository;
 
 
-    @Bean
-    public JavaMailSender javaMailSender() {
-        return new JavaMailSenderImpl();
-    }
+//    @Bean
+//    public JavaMailSender javaMailSender() {
+//        return new JavaMailSenderImpl();
+//    }
 
     @Bean
     public UserDetailsService userDetailsService() {
