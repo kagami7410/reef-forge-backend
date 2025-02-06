@@ -41,23 +41,23 @@ public class ApplicationConfig {
     private String password;
 
 
-    @Bean
-    public JavaMailSender getJavaMailSender() {
-        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
-        // Set up Gmail config
-        mailSender.setHost("smtp.gmail.com");
-        mailSender.setPort(GMAIL_SMTP_PORT);
-
-        // Set up email config (using udeesa email)
-        mailSender.setUsername(username);
-        mailSender.setPassword(password);
-
-        Properties props = mailSender.getJavaMailProperties();
-        props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.auth", "true");
-        props.put("mail.smtp.starttls.enable", "true");
-        return mailSender;
-    }
+//    @Bean
+//    public JavaMailSender getJavaMailSender() {
+//        JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
+//        // Set up Gmail config
+//        mailSender.setHost("smtp.gmail.com");
+//        mailSender.setPort(GMAIL_SMTP_PORT);
+//
+//        // Set up email config (using udeesa email)
+//        mailSender.setUsername(username);
+//        mailSender.setPassword(password);
+//
+//        Properties props = mailSender.getJavaMailProperties();
+//        props.put("mail.transport.protocol", "smtp");
+//        props.put("mail.smtp.auth", "true");
+//        props.put("mail.smtp.starttls.enable", "true");
+//        return mailSender;
+//    }
     @Bean
     public UserDetailsService userDetailsService() {
         return new UserDetailsService() {
