@@ -32,8 +32,7 @@ public class ApplicationConfig {
     private final UserRepository userRepository;
     private static final int GMAIL_SMTP_PORT = 587;
 
-    @Value("${spring.mail.host}")
-    private String host;
+
 
     @Value("${spring.mail.username}")
     private String username;
@@ -46,7 +45,7 @@ public class ApplicationConfig {
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         // Set up Gmail config
-        mailSender.setHost(host);
+        mailSender.setHost("smtp.gmail.com");
         mailSender.setPort(GMAIL_SMTP_PORT);
 
         // Set up email config (using udeesa email)
