@@ -21,10 +21,8 @@ public class User implements UserDetails {
     private Long id;
 
     @Column
-    private String firstName;
+    private String fullName;
 
-    @Column
-    private String lastName;
 
     @Column
     private String email;
@@ -39,14 +37,10 @@ public class User implements UserDetails {
     @JsonIgnoreProperties({"user"})
     private Set<Order> orders = new HashSet<>();
 
-    @Column
-    private String address;
-
-    @Column
-    private String postCode;
-
-    @Column
-    private String town;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties({"user"})
+    @JoinColumn(name = "address_id", referencedColumnName = "id")
+    private Address address;
 
     @Column
     private String phoneNumber;

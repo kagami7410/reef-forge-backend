@@ -43,8 +43,8 @@ public class AuthenticationService {
             user.setRoles(Collections.singleton(request.getRole()));
             user.setAddress(request.getAddress());
             user.setPhoneNumber(request.getPhoneNumber());
-            user.setPostCode(request.getPostCode());
-            user.setTown(request.getTown());
+            user.setFullName(request.getFullName());
+            System.out.println("user added: " + user.getFullName());
             if(user.getRoles().contains(Role.ADMIN)){
                 message = "Created Admin User";
             }

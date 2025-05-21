@@ -33,7 +33,7 @@ public class OrderController {
     }
 
 
-    @GetMapping("deleteAll")
+    @DeleteMapping("deleteAll")
     void deleteAllOrders(){
          orderRepository.deleteAll();
     }
@@ -42,6 +42,8 @@ public class OrderController {
     @PostMapping("submitOrder")
     ResponseEntity<String> submitOrder(
                 @RequestBody OrderRequest orderedRequest){
+        System.out.println("trying to submit order............");
+        System.out.println("Order Request for: " +  orderedRequest.getRegisterRequest().getFullName());
         if(orderService.checkUserExists(orderedRequest.getRegisterRequest().getEmail())){
             try{
                 orderService.submitOrder(orderedRequest.getRegisterRequest(), orderedRequest.getOrderedItems());
@@ -49,6 +51,8 @@ public class OrderController {
                 return  new ResponseEntity<>("Order Submitted!", HttpStatus.ACCEPTED);
             }
             catch (Exception e){
+                System.out.println("exception occoured while submitting order " + e.getMessage());
+
                 return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
             }
 
@@ -65,6 +69,5 @@ public class OrderController {
                 return new ResponseEntity<>(e.getMessage(), HttpStatus.UNPROCESSABLE_ENTITY);
             }
         }
-
     }
 }
