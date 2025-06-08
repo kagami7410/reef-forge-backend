@@ -57,6 +57,8 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers("/fragRacks/**")
                                         .permitAll()
+                                        .requestMatchers("/checkQuantity/**")
+                                        .permitAll()
 
 
 //                                        .requestMatchers("/authenticate")
