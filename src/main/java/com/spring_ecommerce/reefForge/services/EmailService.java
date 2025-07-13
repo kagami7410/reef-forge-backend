@@ -17,7 +17,7 @@ public class EmailService {
 
 
     public void sendConfirmaionEmail(String to, String subject, String text) throws MessagingException {
-        System.out.println("initialising email seender");
+        System.out.println("initialising email sender");
 
         // Create a MimeMessage
         MimeMessage message = mailSender.createMimeMessage();
@@ -28,10 +28,10 @@ public class EmailService {
         // Set the recipient, subject, and HTML content
         helper.setTo(to);
         helper.setSubject(subject);
-        helper.setFrom("himalayancoffee@himalayanfresh.uk");
+        helper.setFrom("noreply@reef-forge.uk");
         helper.setText(text, true); // true enables HTML rendering
 
-        System.out.println("About to send msessage");
+        System.out.println("About to send message");
         mailSender.send(message);
         System.out.println("sucessfully sent email");
     }

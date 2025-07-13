@@ -24,7 +24,7 @@ public class Order {
     private User user;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
-    @JsonIgnoreProperties({"order"})
+    @JsonIgnoreProperties({"order","photoUrls", "description"})
     private Set<BasketItem> basketItems = new HashSet<>();
 
     @Column

@@ -24,14 +24,16 @@ public class FragRackController {
 
     @PostMapping("/add")
     public ResponseEntity<String> addItem (@RequestBody FragRackItem fragRackItem){
-        System.out.println("-------------------------------- Testing ---------------------------------------");
+        System.out.println("-------------------------------- Initilialing item add---------------------------------------");
         boolean isItemAlreadyAdded = fragRacksRepository.findAll().stream()
                 .anyMatch(item -> item.getTitle().equalsIgnoreCase(fragRackItem.getTitle()));
         if(!isItemAlreadyAdded){
             fragRacksRepository.save(fragRackItem);
+            System.out.println("-------------------------------- item added ---------------------------------------");
             return ResponseEntity.ok(fragRackItem.getTitle() +" is added!");
         }
         else {
+            System.out.println("-------------------------------- item  already in the database ---------------------------------------");
             return ResponseEntity.ok(fragRackItem.getTitle() +" is already in the database");
         }
     }
