@@ -17,6 +17,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -76,6 +78,8 @@ public class AuthenticationService {
 
     public AuthenticationResponse authenticate(AuthenticationRequest request){
         String message;
+        String jwtToken;
+        Map<String, String> extraClaims = new HashMap<>();
         logger.info("Initialing Authentication.......");
 
         authenticationManager.authenticate(
@@ -87,14 +91,19 @@ public class AuthenticationService {
         var user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow();
         logger.info("User's email: " + user.getEmail());
-        var jwtToken = jwtService.generateToken(user);
         logger.info("JWT token Generated");
 
         if(user.getRoles().contains(Role.ADMIN)){
             message = "Authenticated Admin";
+            extraClaims.put("isAdmin", "true");
+
+            jwtToken = jwtService.generateToken(extraClaims, user);
+
         }
         else{
             message = "Authenticated User";
+             jwtToken = jwtService.generateToken(user);
+
         }
 
         return AuthenticationResponse.builder()

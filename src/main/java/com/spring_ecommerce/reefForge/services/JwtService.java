@@ -25,7 +25,6 @@ public class JwtService {
 
 
     private static final String SECRET_KEY = "9d05f11f2c71a0284d61b0f6b8547a4e1219412641810d41668b8add4cb7efb7";
-
     public String extractUsername(String token){
         return extractClaim(token, Claims::getSubject);
     }
@@ -49,6 +48,10 @@ public class JwtService {
 
     public String generateToken(Map<String, String> extraClaims,
                                 User user){
+
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        System.out.println("secret key: "+keyBytes);
+        System.out.println("Key length: " + keyBytes.length);
         String email = user.getEmail();
         return Jwts
                 .builder()

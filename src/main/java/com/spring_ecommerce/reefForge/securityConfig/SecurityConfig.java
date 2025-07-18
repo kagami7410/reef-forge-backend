@@ -57,6 +57,8 @@ public class SecurityConfig {
                                         .permitAll()
                                         .requestMatchers("/fragRacks/getByPage/**")
                                         .permitAll()
+                                        .requestMatchers("/fragRacks/getById**")
+                                        .permitAll()
                                         .requestMatchers("/checkQuantity/**")
                                         .permitAll()
                                         .requestMatchers("/gcsBucket/**")
