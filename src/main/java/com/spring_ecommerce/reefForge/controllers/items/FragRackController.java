@@ -1,6 +1,8 @@
 package com.spring_ecommerce.reefForge.controllers.items;
 
+import com.spring_ecommerce.reefForge.models.CoffeeItem;
 import com.spring_ecommerce.reefForge.models.FragRackItem;
+import com.spring_ecommerce.reefForge.models.Item;
 import com.spring_ecommerce.reefForge.repository.FragRacksRepository;
 import com.spring_ecommerce.reefForge.services.FetchItemServiceImpl;
 import org.apache.logging.log4j.LogManager;
@@ -10,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/fragRacks")
@@ -38,6 +41,30 @@ public class FragRackController {
         }
     }
 
+
+    @PutMapping("/update")
+    public ResponseEntity<String> updateItem( @RequestBody FragRackItem fragRackItem) {
+        System.out.println(fragRackItem.getTitle());
+
+        FragRackItem itemOptional = fragRacksRepository.findById(fragRackItem.getId()).orElse(null);
+
+        if (itemOptional.equals(null)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        itemOptional.setCode(fragRackItem.getCode());
+        itemOptional.setPrice(fragRackItem.getPrice());
+        System.out.println("Updating stock quantity to: "+ fragRackItem.getStockQuantity());
+        itemOptional.setStockQuantity(fragRackItem.getStockQuantity());
+        itemOptional.setPhotoUrls(fragRackItem.getPhotoUrls());
+        itemOptional.setTitle(fragRackItem.getTitle());
+        itemOptional.setDescription(fragRackItem.getDescription());
+
+        fragRacksRepository.save(itemOptional);
+
+        return ResponseEntity.ok(fragRackItem.getTitle() + " updated!");
+    }
+
     @GetMapping("/getAll")
     public ResponseEntity<List<FragRackItem>> getAllItems(){
         return ResponseEntity.ok(fragRacksRepository.findAll());
@@ -55,6 +82,15 @@ public class FragRackController {
     private String deleteAllUsers(){
         fragRacksRepository.deleteAll();
         return "all users deleted";
+    }
+
+    @DeleteMapping("deleteById")
+    public ResponseEntity<String> deleteByiD(
+            @RequestParam Long itemId
+    ){
+        System.out.println("item id to delete: " + itemId);
+        fragRacksRepository.deleteById(itemId);
+        return ResponseEntity.ok("item deleted");
     }
 
 

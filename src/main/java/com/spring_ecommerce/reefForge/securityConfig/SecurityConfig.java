@@ -64,6 +64,12 @@ public class SecurityConfig {
                                         .requestMatchers("/gcsBucket/**")
                                         .permitAll()
 
+                                        .requestMatchers("/fragRacks/deleteById/**")
+                                        .permitAll()
+
+
+                                        .requestMatchers("/orders/submitOrder/**")
+                                        .permitAll()
 
 
 //                                        .requestMatchers("/authenticate")
