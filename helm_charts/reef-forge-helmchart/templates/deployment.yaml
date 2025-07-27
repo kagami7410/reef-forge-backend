@@ -21,17 +21,17 @@ spec:
         vault.hashicorp.com/agent-inject-secret-gcs.json: "kv/gcs_credentials"
         vault.hashicorp.com/agent-inject-template-gcs.json: |
         {
-          "type": "{{`{{.Data.data.type  }}`}}{{ end }}",
-          "project_id": "{{`{{ .Data.data.project_id  }}`}}{{ end }}",
-          "private_key_id": "{{`{{ .Data.data.private_key_id  }}`}}{{ end }}",
-          "private_key": "{{`{{ .Data.data.private_key  }}`}}{{ end }}",
-          "client_email": "{{`{{ .Data.data.client_email  }}`}}{{ end }}",
-          "client_id": "{{`{{ .Data.data.client_id  }}`}}{{ end }}",
-          "auth_uri": "{{`{{ .Data.data.auth_uri  }}`}}{{ end }}",
-          "token_uri": "{{`{{ .Data.data.token_uri  }}`}}{{ end }}",
-          "auth_provider_x509_cert_url": "{{`{{ .Data.data.auth_provider_x509_cert_url  }}`}}{{ end }}",
-          "client_x509_cert_url": "{{`{{ .Data.data.client_x509_cert_url  }}`}}{{ end }}",
-          "universe_domain": "{{`{{ .Data.data.universe_domain  }}`}}{{ end }}"
+          "type": "{{ with secret`{{.Data.data.type  }}`}}{{ end }}",
+          "project_id": "{{ with secret`{{ .Data.data.project_id  }}`}}{{ end }}",
+          "private_key_id": "{{ with secret`{{ .Data.data.private_key_id  }}`}}{{ end }}",
+          "private_key": "{{ with secret`{{ .Data.data.private_key  }}`}}{{ end }}",
+          "client_email": "{{ with secret`{{ .Data.data.client_email  }}`}}{{ end }}",
+          "client_id": "{{ with secret`{{ .Data.data.client_id  }}`}}{{ end }}",
+          "auth_uri": "{{ with secret`{{ .Data.data.auth_uri  }}`}}{{ end }}",
+          "token_uri": "{{ with secret`{{ .Data.data.token_uri  }}`}}{{ end }}",
+          "auth_provider_x509_cert_url": "{{ with secret`{{ .Data.data.auth_provider_x509_cert_url  }}`}}{{ end }}",
+          "client_x509_cert_url": "{{ with secret`{{ .Data.data.client_x509_cert_url  }}`}}{{ end }}",
+          "universe_domain": "{{ with secret `{{ .Data.data.universe_domain  }}`}}{{ end }}"
         }
         vault.hashicorp.com/agent-inject-file-gcs.json: "omega-vigil-413814-158bf59a2903.json"
 
