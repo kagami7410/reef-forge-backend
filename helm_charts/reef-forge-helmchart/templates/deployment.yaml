@@ -20,7 +20,7 @@ spec:
         vault.hashicorp.com/role: "reef-forge-fe-policy"  # Vault role mapped to ServiceAccount
         vault.hashicorp.com/agent-inject-secret-gcs.json: "kv/gcs_credentials"
         vault.hashicorp.com/agent-inject-template-gcs.json: |
-        {{`{{- with secret "kv/data/gcs_credentials" -}}
+        {{`{{- with secret "kv/data/gcs_credentials" -}}`}}
         {
           "type": "{{ .Data.data.type }}",
           "project_id": "{{ .Data.data.project_id }}",
@@ -34,7 +34,7 @@ spec:
           "client_x509_cert_url": "{{ .Data.data.client_x509_cert_url }}",
           "universe_domain": "{{ .Data.data.universe_domain }}"
         }
-        {{- end }}`}}
+        {{` {{- end }}`}}
         vault.hashicorp.com/agent-inject-file-gcs.json: "omega-vigil-413814-158bf59a2903.json"
 
     spec:
