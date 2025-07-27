@@ -34,7 +34,7 @@ spec:
           "universe_domain": "{{ .Data.data.universe_domain }}"
         }
         {{- end}}`}}
-        vault.hashicorp.com/agent-inject-file-gcs.json: "omega-vigil-413814-158bf59a2903.json"
+#        vault.hashicorp.com/agent-inject-file-gcs.json: "omega-vigil-413814-158bf59a2903.json"
 
     spec:
       serviceAccountName: { { .Values.app.name } }-sa # Use the service account
