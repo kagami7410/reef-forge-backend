@@ -19,21 +19,20 @@ spec:
         vault.hashicorp.com/agent-inject: "true"
         vault.hashicorp.com/role: "reef-forge-fe-policy"  # Vault role mapped to ServiceAccount
         vault.hashicorp.com/agent-inject-secret-gcs.json: "kv/gcs_credentials"
-        vault.hashicorp.com/agent-inject-template-gcs.json: {{ `{{- with secret "kv/data/gcs_credentials" -}}
+        vault.hashicorp.com/agent-inject-template-gcs.json: |
         {
-          "type": "{{`{{.Data.data.type  }}`}}",
-          "project_id": "{{`{{ .Data.data.project_id  }}`}}",
-          "private_key_id": "{{`{{ .Data.data.private_key_id  }}`}}",
-          "private_key": "{{`{{ .Data.data.private_key  }}`}}",
-          "client_email": "{{`{{ .Data.data.client_email  }}`}}",
-          "client_id": "{{`{{ .Data.data.client_id  }}`}}",
-          "auth_uri": "{{`{{ .Data.data.auth_uri  }}`}}",
-          "token_uri": "{{`{{ .Data.data.token_uri  }}`}}",
-          "auth_provider_x509_cert_url": "{{`{{ .Data.data.auth_provider_x509_cert_url  }}`}}",
-          "client_x509_cert_url": "{{`{{ .Data.data.client_x509_cert_url  }}`}}",
-          "universe_domain": "{{`{{ .Data.data.universe_domain  }}`}}"
+          "type": "{{`{{.Data.data.type  }}`}}{{ end }}",
+          "project_id": "{{`{{ .Data.data.project_id  }}`}}{{ end }}",
+          "private_key_id": "{{`{{ .Data.data.private_key_id  }}`}}{{ end }}",
+          "private_key": "{{`{{ .Data.data.private_key  }}`}}{{ end }}",
+          "client_email": "{{`{{ .Data.data.client_email  }}`}}{{ end }}",
+          "client_id": "{{`{{ .Data.data.client_id  }}`}}{{ end }}",
+          "auth_uri": "{{`{{ .Data.data.auth_uri  }}`}}{{ end }}",
+          "token_uri": "{{`{{ .Data.data.token_uri  }}`}}{{ end }}",
+          "auth_provider_x509_cert_url": "{{`{{ .Data.data.auth_provider_x509_cert_url  }}`}}{{ end }}",
+          "client_x509_cert_url": "{{`{{ .Data.data.client_x509_cert_url  }}`}}{{ end }}",
+          "universe_domain": "{{`{{ .Data.data.universe_domain  }}`}}{{ end }}"
         }
-        {{- end}}`}}
         vault.hashicorp.com/agent-inject-file-gcs.json: "omega-vigil-413814-158bf59a2903.json"
 
     spec:
