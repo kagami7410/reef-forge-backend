@@ -38,7 +38,7 @@ spec:
         vault.hashicorp.com/agent-inject-file-gcs.json: "omega-vigil-413814-158bf59a2903.json"
 
     spec:
-      serviceAccountName: { { .Values.app.name } }-sa # Use the service account
+      serviceAccountName: {{ .Values.app.name }}-sa # Use the service account
       containers:
       - name: {{ .Values.app.name}}
         image: {{ .Values.app.image.name}}:{{.Values.app.image.tag}}
