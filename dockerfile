@@ -8,4 +8,4 @@ RUN chmod +x /app/entrypoint.sh
 COPY credentials/omega-vigil-413814-158bf59a2903.json credentials/omega-vigil-413814-158bf59a2903.json
 EXPOSE 9080
 #ENTRYPOINT ["java", "-jar", "app.jar"]
-ENTRYPOINT ["/app/entrypoint.sh"]
+ENTRYPOINT ["/app/en   trypoint.sh"]
