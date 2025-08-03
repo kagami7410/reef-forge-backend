@@ -10,4 +10,5 @@ import java.util.Set;
 public class OrderRequest {
     private RegisterRequest registerRequest;
     private Set<OrderedItem> orderedItems;
+    private String orderId;
 }

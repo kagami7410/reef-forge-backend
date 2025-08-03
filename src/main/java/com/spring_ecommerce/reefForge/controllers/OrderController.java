@@ -46,8 +46,8 @@ public class OrderController {
         System.out.println("Order Request for: " +  orderedRequest.getRegisterRequest().getFullName());
         if(orderService.checkUserExists(orderedRequest.getRegisterRequest().getEmail())){
             try{
-                orderService.submitOrder(orderedRequest.getRegisterRequest(), orderedRequest.getOrderedItems());
-                emailService.sendConfirmaionEmail(orderedRequest.getRegisterRequest().getEmail(), "Reef-Forge", "<html><body><h1>Thank you for your Order!</h1><p>This is an <b>Confirmation</b> email for your order: #23234352254 from Himalayan Fresh</p></body></html> " );
+                orderService.submitOrder(orderedRequest);
+                emailService.sendConfirmaionEmail(orderedRequest.getRegisterRequest().getEmail(), "Reef-Forge", "<html><body><h1>Thank you for your Order!</h1><p>This is an <b>Confirmation</b> email for your order: " + orderedRequest.getOrderId()+"from Himalayan Fresh</p></body></html> " );
                 return  new ResponseEntity<>("Order Submitted!", HttpStatus.ACCEPTED);
             }
             catch (Exception e){
@@ -60,7 +60,7 @@ public class OrderController {
         else{
             authenticationService.register(orderedRequest.getRegisterRequest());
             try{
-                orderService.submitOrder(orderedRequest.getRegisterRequest(), orderedRequest.getOrderedItems());
+                orderService.submitOrder(orderedRequest);
                 emailService.sendConfirmaionEmail(orderedRequest.getRegisterRequest().getEmail(), "Reef-Forge", "<html><body><h1>Thank you for your Order!</h1><p>This is an <b>Confirmation</b> email for your order: #23234352254 from Himalayan Fresh</p></body></html> " );
 
                 return  new ResponseEntity<>("Order Submitted!", HttpStatus.ACCEPTED);
@@ -70,4 +70,9 @@ public class OrderController {
             }
         }
     }
+
+
+
+
 }
+

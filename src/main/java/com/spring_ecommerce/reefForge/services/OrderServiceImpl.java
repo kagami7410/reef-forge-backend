@@ -25,10 +25,10 @@ public class OrderServiceImpl implements OrderPolicies {
     OrderRepository orderRepository;
 
     @Transactional
-    public void submitOrder(RegisterRequest user, Set<OrderedItem> items) throws Exception{
+    public void submitOrder(OrderRequest orderRequest) throws Exception{
         Order order = new Order();
         Set<BasketItem> basketItems = new HashSet<>();
-        items.stream().forEach(
+        orderRequest.getOrderedItems().stream().forEach(
                         eachOrderedItem -> {
                             int basketItemAvailableQuantity = checkStock(eachOrderedItem);
 
@@ -39,6 +39,7 @@ public class OrderServiceImpl implements OrderPolicies {
                                 basketItem.setOrder(order);
                                 basketItem.setItem(itemRepository.findById(eachOrderedItem.getItemId()).orElseThrow());
                                 basketItem.setQuantity(eachOrderedItem.getItemQuantity());
+
                                 basketItems.add(basketItem);
                                 System.out.println("Item with id: " + eachOrderedItem.getItemId() + " has stock availablity!");
                             }
@@ -49,8 +50,9 @@ public class OrderServiceImpl implements OrderPolicies {
                             }
                         }
                 );
-        order.setUser(userRepository.findByEmail(user.getEmail()).orElse(null));
+        order.setUser(userRepository.findByEmail(orderRequest.getRegisterRequest().getEmail()).orElse(null));
         order.setBasketItems(basketItems);
+        order.setOrderId(orderRequest.getOrderId());
         order.setDate(LocalDateTime.now());
         orderRepository.save(order);
     }

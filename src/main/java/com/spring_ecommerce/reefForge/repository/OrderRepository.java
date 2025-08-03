@@ -4,4 +4,6 @@ import com.spring_ecommerce.reefForge.models.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface OrderRepository extends JpaRepository<Order, Long> {
+
+    public Order findByOrderId(String orderId);
 }
