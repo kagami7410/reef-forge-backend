@@ -4,7 +4,6 @@ package com.spring_ecommerce.reefForge.services;
 
 import com.spring_ecommerce.reefForge.models.User;
 import com.spring_ecommerce.reefForge.repository.UserRepository;
-import com.spring_ecommerce.reefForge.security.RandomIdGenerator;
 import com.spring_ecommerce.reefForge.securityModels.AuthenticationRequest;
 import com.spring_ecommerce.reefForge.securityModels.AuthenticationResponse;
 import com.spring_ecommerce.reefForge.securityModels.RegisterRequest;
@@ -86,14 +85,12 @@ public class AuthenticationService {
         String message;
         boolean emailAlreadyExists = userRepository.existsByEmail(request.getEmail());
 
-        String userId = RandomIdGenerator.generate(10);
 
         if(!emailAlreadyExists){
             User user = new com.spring_ecommerce.reefForge.models.User();
             user.setRoles(Collections.singleton(request.getRole()));
             user.setAddress(request.getAddress());
             user.setPassword(request.getPassword());
-            user.setUserId(userId);
             user.setEmail(request.getEmail());
             user.setVerified(false);
             user.setPhoneNumber(request.getPhoneNumber());
@@ -120,7 +117,6 @@ public class AuthenticationService {
             final  Map<String, String> extraJwtClaim = new HashMap<>();
             extraJwtClaim.put("fullName", user.getFullName());
             extraJwtClaim.put("userEmail",request.getEmail());
-            extraJwtClaim.put("userId", userId);
 
 
             if(request.getRole() == Role.ADMIN){
@@ -131,9 +127,6 @@ public class AuthenticationService {
                 extraJwtClaim.put("isAdmin", "false");
 
             }
-            extraJwtClaim.put("userId", userId);
-
-
 
 
 

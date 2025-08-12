@@ -27,13 +27,8 @@ public class UserRegistrationService {
     public User saveUserFromToken(String token) {
 
         String email = jwtService.extractEmail(token);
-        boolean isAdmin = jwtService.extractIsAdmin(token);
-        String fullName = jwtService.extractFullName(token);
-        String userId = jwtService.extractUserId(token);
 
-
-
-        User user = userRepository.findByUserId(userId).orElseThrow();
+        User user = userRepository.findByEmail(email).orElseThrow();
 
         System.out.println("user to verify: " + user.getFullName()  );
 
