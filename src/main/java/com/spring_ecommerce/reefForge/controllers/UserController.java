@@ -7,6 +7,7 @@ import com.spring_ecommerce.reefForge.securityModels.AuthenticationResponse;
 import com.spring_ecommerce.reefForge.securityModels.RegisterRequest;
 import com.spring_ecommerce.reefForge.services.AuthenticationService;
 import com.spring_ecommerce.reefForge.services.OrderServiceImpl;
+import com.spring_ecommerce.reefForge.services.UserRegistrationService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import org.apache.logging.log4j.LogManager;
@@ -40,6 +41,9 @@ public class UserController {
     @Autowired
     BasketItemRepository basketItemRepository;
 
+    @Autowired
+    UserRegistrationService userRegistrationService;
+
 //    @Autowired
 //    BasketItem basketItem;
 
@@ -59,28 +63,86 @@ public class UserController {
 
 
     @PostMapping("/register")
-    private ResponseEntity<AuthenticationResponse> addUser(
-            @RequestBody RegisterRequest request){
-        return ResponseEntity.ok(authenticationService.register(request));
+    private ResponseEntity addUser(
+            @RequestParam String token
+    ){
+
+        System.out.println("trying to add user");
+        userRegistrationService.saveUserFromToken(token);
+        return ResponseEntity.ok("user registered");
+
+
+
     }
+
+
+
+// old register controller
+
+
+//    @PostMapping("/register")
+//    private ResponseEntity addUser(
+//            @RequestBody RegisterRequest request,
+//            @RequestParam String token) {
+//
+//        System.out.println("trying to add user");
+//        if (authenticationService.register(request).getMessage().contains("already")) {
+//            return ResponseEntity.badRequest().body("email already in use");
+//        } else {
+//            return ResponseEntity.ok(authenticationService.register(request));
+//
+//        }
+//    }
+
+
+
+// email is sent to user with jwt token where token includes the details of the user and all they have to do is click verify button
+    @PostMapping("/preRegister")
+    private ResponseEntity verifyEmailAndRegister(
+            @RequestBody RegisterRequest request){
+        System.out.println("trying to verify and register user");
+        if(userRepository.existsByEmail(request.getEmail())){
+            return ResponseEntity.badRequest().body("email already in use");
+        }
+        else{
+            return ResponseEntity.ok(authenticationService.preRegister(request));
+
+        }
+    }
+
 
 
     @PostMapping("/authenticate")
-    public ResponseEntity<AuthenticationResponse> authenticate(
+    public ResponseEntity<?> authenticate(
             @RequestBody AuthenticationRequest request,
             HttpServletResponse response
     ) {
-        logger.info("Autenticating...");
-        Cookie cookie = new Cookie("admin", "true");
-        cookie.setHttpOnly(true);
-//        cookie.setSecure(true); // Set to true in production environments
-        cookie.setPath("/");
-        cookie.setMaxAge(7 * 24 * 60 * 60); // 1 week
-        cookie.setDomain("localhost"); // Set to your domain if needed
-        response.addCookie(cookie);
 
-        return ResponseEntity.ok(authenticationService.authenticate(request));
-    }
+        try{
+            User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
+
+            if(user.isVerified()){
+                logger.info("Authenticating...");
+                Cookie cookie = new Cookie("admin", "true");
+                cookie.setHttpOnly(true);
+                cookie.setPath("/");
+                cookie.setMaxAge(60); // 1 week
+                cookie.setDomain("localhost"); // Set to your domain if needed
+                response.addCookie(cookie);
+
+                return ResponseEntity.ok(authenticationService.authenticate(request));
+            }
+            else {
+                return ResponseEntity.badRequest().body("User is not verified");
+            }
+        }
+        catch (Exception e){
+           return  ResponseEntity.badRequest().body(e.getMessage());
+        }
+
+
+        }
+
 
 
 

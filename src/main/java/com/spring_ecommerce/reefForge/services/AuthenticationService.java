@@ -4,6 +4,7 @@ package com.spring_ecommerce.reefForge.services;
 
 import com.spring_ecommerce.reefForge.models.User;
 import com.spring_ecommerce.reefForge.repository.UserRepository;
+import com.spring_ecommerce.reefForge.security.RandomIdGenerator;
 import com.spring_ecommerce.reefForge.securityModels.AuthenticationRequest;
 import com.spring_ecommerce.reefForge.securityModels.AuthenticationResponse;
 import com.spring_ecommerce.reefForge.securityModels.RegisterRequest;
@@ -11,6 +12,7 @@ import com.spring_ecommerce.reefForge.securityModels.Role;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -32,7 +34,8 @@ public class AuthenticationService {
 
     private final AuthenticationManager authenticationManager;
 
-
+    @Autowired
+    EmailService emailService;
 
 
     public AuthenticationResponse register(RegisterRequest request) {
@@ -76,6 +79,94 @@ public class AuthenticationService {
         }
     }
 
+
+
+
+    public AuthenticationResponse preRegister(RegisterRequest request) {
+        String message;
+        boolean emailAlreadyExists = userRepository.existsByEmail(request.getEmail());
+
+        String userId = RandomIdGenerator.generate(10);
+
+        if(!emailAlreadyExists){
+            User user = new com.spring_ecommerce.reefForge.models.User();
+            user.setRoles(Collections.singleton(request.getRole()));
+            user.setAddress(request.getAddress());
+            user.setPassword(request.getPassword());
+            user.setUserId(userId);
+            user.setEmail(request.getEmail());
+            user.setVerified(false);
+            user.setPhoneNumber(request.getPhoneNumber());
+            user.setFullName(request.getFullName());
+            System.out.println("user added: " + user.getFullName());
+            if(user.getRoles().contains(Role.ADMIN)){
+                message = "Created Admin User";
+
+            }
+            else{
+                message = "Created User";
+            }
+            if (request.getPassword() != null){
+                user.setPassword(passwordEncoder.encode(request.getPassword()));
+            }
+            else{
+                user.setPassword(passwordEncoder.encode("test"));
+            }
+
+            userRepository.save(user);
+            System.out.println("trying to pre-register user: " + request.getEmail());
+
+            //extra jwt claims for fullname
+            final  Map<String, String> extraJwtClaim = new HashMap<>();
+            extraJwtClaim.put("fullName", user.getFullName());
+            extraJwtClaim.put("userEmail",request.getEmail());
+            extraJwtClaim.put("userId", userId);
+
+
+            if(request.getRole() == Role.ADMIN){
+                extraJwtClaim.put("isAdmin", "true");
+
+            }
+            else{
+                extraJwtClaim.put("isAdmin", "false");
+
+            }
+            extraJwtClaim.put("userId", userId);
+
+
+
+
+
+
+            var jwtToken = jwtService.generateToken(extraJwtClaim, user);
+
+            try{
+                System.out.println("trying to sent email for verification");
+
+                emailService.sendConfirmaionEmail(request.getEmail(), "Reef-Forge Email Verification", "<html><body><h1>Click the verify button to verify your email! </h1> <form action=\"http://localhost:3000\">\n" +
+                        "  <button type=\"submit\">Verify</button>\n" + jwtToken +
+                        "</form></body></html> " );
+
+                System.out.println("email sent for verification");
+
+            }
+            catch (Exception e){
+                e.getMessage();
+            }
+
+
+
+            return AuthenticationResponse.builder()
+                    .token(jwtToken)
+                    .message(message).build();
+
+        }
+        else {
+            return AuthenticationResponse.builder()
+                    .token(null)
+                    .message("Email already in use").build();
+        }
+    }
     public AuthenticationResponse authenticate(AuthenticationRequest request){
         String message;
         String jwtToken;

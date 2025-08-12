@@ -18,8 +18,10 @@ public class InventoryServiceImpl implements  InventoryService{
             if(item != null){
                 if(item.getStockQuantity() > quantityToCheck){
                     return true;
-                }
-                else{
+                } else if (item.getStockQuantity() == quantityToCheck) {
+                    return true;
+
+                } else{
                     return false;
                 }
             }

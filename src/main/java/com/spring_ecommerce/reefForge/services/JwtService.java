@@ -55,7 +55,7 @@ public class JwtService {
         String email = user.getEmail();
         return Jwts
                 .builder()
-                .setIssuer("Site1")
+                .setIssuer("reef-forge")
                 .setClaims(extraClaims)
                 .claim("email", email)
                 .setSubject(user.getEmail())
@@ -72,6 +72,25 @@ public class JwtService {
                 .build()
                 .parseClaimsJws(token)
                 .getBody();
+    }
+
+    public String extractEmail(String token) {
+        return extractClaim(token, claims -> claims.get("userEmail", String.class));
+    }
+    public String extractFullName(String token) {
+        return extractClaim(token, claims -> claims.get("fullName", String.class));
+    }
+
+    public String extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("userId", String.class));
+    }
+
+
+
+
+
+    public boolean extractIsAdmin(String token) {
+        return Boolean.parseBoolean(extractClaim(token, claims -> claims.get("isAdmin", String.class)));
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver){

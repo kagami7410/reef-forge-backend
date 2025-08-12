@@ -33,6 +33,6 @@ public class EmailService {
 
         System.out.println("About to send message");
         mailSender.send(message);
-        System.out.println("sucessfully sent email");
+        System.out.println("successfully sent email");
     }
 }

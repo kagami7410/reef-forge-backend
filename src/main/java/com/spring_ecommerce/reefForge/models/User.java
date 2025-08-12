@@ -23,6 +23,8 @@ public class User implements UserDetails {
     @Column
     private String fullName;
 
+    @Column
+    private String userId;
 
     @Column
     private String email;
@@ -31,6 +33,9 @@ public class User implements UserDetails {
 
     @Column
     private Set<Role> roles;
+
+    @Column
+    private boolean verified;
 
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
