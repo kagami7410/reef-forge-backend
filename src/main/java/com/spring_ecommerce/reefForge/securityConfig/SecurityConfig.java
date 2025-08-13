@@ -68,7 +68,7 @@ public class SecurityConfig {
                                         .permitAll()
 
 
-                                        .requestMatchers("/orders/submitOrder/**")
+                                        .requestMatchers("/orders/**")
                                         .permitAll()
 
 

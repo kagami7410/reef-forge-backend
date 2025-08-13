@@ -15,24 +15,46 @@ public class EmailService {
     private JavaMailSender mailSender;
     Logger logger = LogManager.getLogger(EmailService.class);
 
+//if email is sent returns true
+    public boolean sendConfirmaionEmail(String to, String subject, String text) throws MessagingException {
 
-    public void sendConfirmaionEmail(String to, String subject, String text) throws MessagingException {
-        System.out.println("initialising email sender");
+        try{
+            System.out.println("initialising email sender");
 
-        // Create a MimeMessage
-        MimeMessage message = mailSender.createMimeMessage();
+            // Create a MimeMessage
+            MimeMessage message = mailSender.createMimeMessage();
 
-        // Use MimeMessageHelper to manage multipart and HTML content
-        MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            // Use MimeMessageHelper to manage multipart and HTML content
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
 
-        // Set the recipient, subject, and HTML content
-        helper.setTo(to);
-        helper.setSubject(subject);
-        helper.setFrom("noreply@reef-forge.uk");
-        helper.setText(text, true); // true enables HTML rendering
+            // Set the recipient, subject, and HTML content
+            helper.setTo(to);
+            helper.setSubject(subject);
+            helper.setFrom("noreply@reef-forge.uk");
+            helper.setText(text, true); // true enables HTML rendering
 
-        System.out.println("About to send message");
-        mailSender.send(message);
-        System.out.println("successfully sent email");
+            System.out.println("About to send message");
+            mailSender.send(message);
+            System.out.println("successfully sent email");
+
+            return true;
+
+
+    } catch (jakarta.mail.SendFailedException e) {
+
+            logger.error("Invalid email address: " + to, e);
+            return false;
+
+        } catch (MessagingException e) {
+        logger.error("Messaging error while sending email to " + to, e);
+            return false;
+
+        } catch (Exception e) {
+        logger.error("Unexpected error while sending email to " + to, e);
+            return false;
+
+        }
+
+
     }
 }

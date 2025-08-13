@@ -7,6 +7,7 @@ import com.spring_ecommerce.reefForge.securityModels.AuthenticationResponse;
 import com.spring_ecommerce.reefForge.securityModels.RegisterRequest;
 import com.spring_ecommerce.reefForge.services.AuthenticationService;
 import com.spring_ecommerce.reefForge.services.OrderServiceImpl;
+import com.spring_ecommerce.reefForge.services.ResetPasswordService;
 import com.spring_ecommerce.reefForge.services.UserRegistrationService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,6 +32,8 @@ public class UserController {
     @Autowired
     AuthenticationService authenticationService;
 
+    @Autowired
+    ResetPasswordService resetPasswordService;
     @Autowired
     UserRepository userRepository;
 
@@ -105,10 +108,46 @@ public class UserController {
             return ResponseEntity.badRequest().body("email already in use");
         }
         else{
-            return ResponseEntity.ok(authenticationService.preRegister(request));
+            if (authenticationService.preRegister(request).equals(AuthenticationResponse.builder()
+                    .message("Email is invalid").build())) {
+                return ResponseEntity.badRequest().body("Email is Invalid");
+            }
+            else{
+                return ResponseEntity.ok(authenticationService.preRegister(request));
+            }
 
         }
     }
+
+
+    @GetMapping("/restPasswordInit")
+    private ResponseEntity restPasswordInit(
+            @RequestParam String email){
+        System.out.println("trying to verify and register user");
+        if(userRepository.existsByEmail(email)){
+
+            resetPasswordService.sendEmailForReset(email);
+            return ResponseEntity.ok("Password Reset");
+        }
+        else{
+            return ResponseEntity.badRequest().body("Email is not registered with reef-forge");
+
+        }
+    }
+
+
+    @PostMapping("/resetPassword")
+    private ResponseEntity restPassword(
+            @RequestParam String jwtToken,
+            @RequestBody ResetPassword newPassword){
+        System.out.println("trying to verify and register user");
+        System.out.println("jwtToken: " + jwtToken);
+            resetPasswordService.resetPassword(jwtToken, newPassword.newPassword());
+            return ResponseEntity.ok("Password Reset");
+
+
+    }
+
 
 
 

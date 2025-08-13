@@ -5,6 +5,7 @@ import com.spring_ecommerce.reefForge.models.*;
 import com.spring_ecommerce.reefForge.repository.OrderRepository;
 import com.spring_ecommerce.reefForge.services.AuthenticationService;
 import com.spring_ecommerce.reefForge.services.EmailService;
+import com.spring_ecommerce.reefForge.services.JwtService;
 import com.spring_ecommerce.reefForge.services.OrderServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,8 +28,20 @@ public class OrderController {
     @Autowired
     AuthenticationService authenticationService;
 
+    @Autowired
+    JwtService jwtService;
+
     @GetMapping("getAll")
     ResponseEntity<?> getAllOrders(){
+        return ResponseEntity.ok(orderRepository.findAll());
+    }
+
+    @GetMapping("getUserOrder")
+    ResponseEntity<?> getUserOrder(
+            @CookieValue(name = "token") String jwtToken
+    ){
+        String userEmail = jwtService.extractEmail(jwtToken);
+        System.out.println("user Email: " + userEmail);
         return ResponseEntity.ok(orderRepository.findAll());
     }
 

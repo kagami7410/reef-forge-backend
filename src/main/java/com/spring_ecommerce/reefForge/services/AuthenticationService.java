@@ -8,6 +8,7 @@ import com.spring_ecommerce.reefForge.securityModels.AuthenticationRequest;
 import com.spring_ecommerce.reefForge.securityModels.AuthenticationResponse;
 import com.spring_ecommerce.reefForge.securityModels.RegisterRequest;
 import com.spring_ecommerce.reefForge.securityModels.Role;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -35,6 +36,8 @@ public class AuthenticationService {
 
     @Autowired
     EmailService emailService;
+
+
 
 
     public AuthenticationResponse register(RegisterRequest request) {
@@ -110,16 +113,16 @@ public class AuthenticationService {
                 user.setPassword(passwordEncoder.encode("test"));
             }
 
-            userRepository.save(user);
+
             System.out.println("trying to pre-register user: " + request.getEmail());
 
             //extra jwt claims for fullname
             final  Map<String, String> extraJwtClaim = new HashMap<>();
             extraJwtClaim.put("fullName", user.getFullName());
-            extraJwtClaim.put("userEmail",request.getEmail());
+            extraJwtClaim.put("email",request.getEmail());
 
 
-            if(request.getRole() == Role.ADMIN){
+            if(request.getRole() == Role.ADMIN && request.getEmail() == "sujangurung10@gmail.com"){
                 extraJwtClaim.put("isAdmin", "true");
 
             }
@@ -132,33 +135,50 @@ public class AuthenticationService {
 
 
             var jwtToken = jwtService.generateToken(extraJwtClaim, user);
+            String verificationLink = "http://localhost:3000/verifyEmail?token=" + jwtToken;
 
             try{
                 System.out.println("trying to sent email for verification");
 
-                emailService.sendConfirmaionEmail(request.getEmail(), "Reef-Forge Email Verification", "<html><body><h1>Click the verify button to verify your email! </h1> <form action=\"http://localhost:3000\">\n" +
-                        "  <button type=\"submit\">Verify</button>\n" + jwtToken +
-                        "</form></body></html> " );
+               if(emailService.sendConfirmaionEmail(request.getEmail(), "Reef-Forge Email Verification", "<html><body>" +
+                       "<h1>Click the verify button to verify your email!</h1>" +
+                       "<a href=\"" + verificationLink + "\" " +
+                       "style=\"display:inline-block;padding:10px 20px;background-color:#4CAF50;color:white;text-decoration:none;border-radius:5px;\">" +
+                       "Verify Email</a>" +
+                       "</body></html>")){
+                   System.out.println("email sent for verification");
+                   userRepository.save(user);
+                   return AuthenticationResponse.builder()
+                           .token(jwtToken)
+                           .message(message).build();
 
-                System.out.println("email sent for verification");
-
-            }
-            catch (Exception e){
-                e.getMessage();
-            }
-
+               }
+               else {
+                   return AuthenticationResponse.builder()
+                           .message("Email is invalid").build();
+               }
 
 
-            return AuthenticationResponse.builder()
-                    .token(jwtToken)
-                    .message(message).build();
+
+
+        } catch (jakarta.mail.SendFailedException e) {
+
+            logger.error("Invalid email address: " +  e);
+                return AuthenticationResponse.builder()
+                        .message("error while sending email").build();
+            } catch (MessagingException e) {
+            logger.error("Messaging error while sending email to " + e);
+                return AuthenticationResponse.builder()
+                        .message("error while sending email").build();
+        } catch (Exception e) {
+            logger.error("Unexpected error while sending email to " +  e);
+                return AuthenticationResponse.builder()
+                        .message("error while sending email").build();
+        }
 
         }
-        else {
-            return AuthenticationResponse.builder()
-                    .token(null)
-                    .message("Email already in use").build();
-        }
+
+        return null;
     }
     public AuthenticationResponse authenticate(AuthenticationRequest request){
         String message;
