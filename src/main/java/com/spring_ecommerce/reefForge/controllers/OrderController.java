@@ -3,6 +3,7 @@ package com.spring_ecommerce.reefForge.controllers;
 
 import com.spring_ecommerce.reefForge.models.*;
 import com.spring_ecommerce.reefForge.repository.OrderRepository;
+import com.spring_ecommerce.reefForge.repository.UserRepository;
 import com.spring_ecommerce.reefForge.services.AuthenticationService;
 import com.spring_ecommerce.reefForge.services.EmailService;
 import com.spring_ecommerce.reefForge.services.JwtService;
@@ -12,12 +13,18 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+import java.util.Set;
+
 @RestController
 @RequestMapping("/orders")
 public class OrderController {
 
     @Autowired
     OrderRepository orderRepository;
+
+    @Autowired
+    UserRepository userRepository;
 
     @Autowired
     EmailService emailService;
@@ -37,12 +44,20 @@ public class OrderController {
     }
 
     @GetMapping("getUserOrder")
-    ResponseEntity<?> getUserOrder(
+    ResponseEntity<List<OrderDetailsDTO>> getUserOrder(
             @CookieValue(name = "token") String jwtToken
     ){
         String userEmail = jwtService.extractEmail(jwtToken);
+        User user = userRepository.findByEmail(userEmail).orElseThrow();
+        Set<Order> orderList = user.getOrders();
+        List<OrderDetailsDTO> userOrderDetails = orderList.stream()
+                .map(eachOrder -> new OrderDetailsDTO(
+                        eachOrder.getOrderId(),
+                        eachOrder.getBasketItems(),
+                        eachOrder.getDate())
+                ).toList();
         System.out.println("user Email: " + userEmail);
-        return ResponseEntity.ok(orderRepository.findAll());
+        return ResponseEntity.ok(userOrderDetails);
     }
 
 

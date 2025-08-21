@@ -38,6 +38,7 @@ public class ResetPasswordService {
 
             if (newPassword != null){
                 user.setPassword(passwordEncoder.encode(newPassword));
+                user.setVerified(true);
             }
             else{
                 user.setPassword(passwordEncoder.encode("test"));
@@ -59,7 +60,7 @@ public class ResetPasswordService {
             try{
                 System.out.println("trying to sent email for reset confirmation");
 
-                emailService.sendConfirmaionEmail(newPassword, "Reef-Forge Email Verification", "<html><body>" +
+                emailService.sendConfirmaionEmail(userEmail, "Reef-Forge Email Verification", "<html><body>" +
                         "<h1>Password reset</h1>" +
                         "</body></html>");
 

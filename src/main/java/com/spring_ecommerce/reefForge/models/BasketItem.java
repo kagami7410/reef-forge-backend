@@ -18,13 +18,13 @@ public class BasketItem {
 
     @ManyToOne
     @JoinColumn(name = "item_id", referencedColumnName = "id")
-    @JsonIgnoreProperties({"item", "basketItems"})
+    @JsonIgnoreProperties({"item", "basketItems", "description", "magnetNum","colour","code","size","stockQuantity"})
     private Item item;
 
 
     @ManyToOne
     @JoinColumn(name = "order_id", referencedColumnName = "id")
-    @JsonIgnoreProperties({"item"})
+    @JsonIgnoreProperties({"id","date", "basketItems","user","orderId"})
     private Order order;
 
     @Column
