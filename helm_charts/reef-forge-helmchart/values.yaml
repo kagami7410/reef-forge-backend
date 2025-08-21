@@ -2,7 +2,7 @@ app:
   name: reef-forge-backend
   image:
     name: docker.io/sujan7410/reef-forge-backend
-    tag: release_v0.0.1
+    tag: release_v1.0.0
 namespace:
   name: reef-forge-backend
 
